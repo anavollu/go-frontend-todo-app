@@ -11,6 +11,7 @@
 	});
 
 	async function createTodo() {
+		let data;
 		const headersList = {
 			'Content-Type': 'application/json'
 		};
@@ -23,8 +24,30 @@
 			headers: headersList
 		});
 
-		const data = await response.text();
+		if (response.ok) {
+			data = await response.text();
+		} else {
+			console.error(`Error creating data.`);
+		}
 		console.log(data);
+	}
+
+	async function deleteTodo(id: number) {
+		let data;
+		let headersList = {
+			'Content-Type': 'application/json'
+		};
+
+		let response = await fetch(`http://localhost:3000/todo/${id}`, {
+			method: 'DELETE',
+			headers: headersList
+		});
+
+		if (response.ok) {
+			data = await response.text();
+		} else {
+			console.error(`Error deleting data with ID ${id}.`);
+		}
 	}
 </script>
 
@@ -32,16 +55,25 @@
 	<h1 class="font-bold text-xl text-center">Svelte & Go | To-Do</h1>
 
 	<div class="border border-black p-4">
-		<p class="font-semibold mb-2">To-Do list</p>
-		{#each todos as todo}
-			<p>ID:{todo.ID}, Name:{todo.name}, done:{todo.done}</p>
-		{/each}
+		<p class="font-semibold mb-2 text-center">To-Do list</p>
+		<div class="flex flex-col gap-2">
+			{#each todos as todo}
+				<div class="flex justify-between">
+					<p>ID:{todo.ID}, Name:{todo.name}, done:{todo.done}</p>
+					<button
+						on:click={() => deleteTodo(todo.ID)}
+						class="bg-red-600 text-white rounded-md p-1 text-sm">Delete</button
+					>
+				</div>
+			{/each}
+		</div>
 	</div>
 
 	<div class="border border-black p-4">
+		<p class="font-semibold mb-2 text-center">Create todo</p>
 		<form on:submit|preventDefault={createTodo} class="flex flex-col gap-2">
 			<div class="flex gap-4 items-center">
-				<label for="name">Nome da tarefa</label>
+				<label for="name">Task name</label>
 				<input
 					id="name"
 					type="text"
@@ -53,9 +85,7 @@
 				<label for="done">Done</label>
 				<input id="done" type="checkbox" class="w-4 h-4" bind:checked={formData.done} />
 			</div>
-			<button class="bg-blue-400 rounded-md text-white font-semibold" type="submit"
-				>Criar tarefa</button
-			>
+			<button class="bg-blue-400 rounded-md text-white font-semibold" type="submit">Create</button>
 		</form>
 	</div>
 </main>
