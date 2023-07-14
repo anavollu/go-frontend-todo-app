@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	let todos: { name: string; done: boolean }[] = [];
+	let todos: { ID: number; name: string; done: boolean }[] = [];
 	let formData: { name: string; done: boolean } = { name: '', done: false };
 
 	onMount(async () => {
@@ -34,7 +34,7 @@
 	<div class="border border-black p-4">
 		<p class="font-semibold mb-2">To-Do list</p>
 		{#each todos as todo}
-			<p>Name:{todo.name}, done:{todo.done}</p>
+			<p>ID:{todo.ID}, Name:{todo.name}, done:{todo.done}</p>
 		{/each}
 	</div>
 
@@ -51,7 +51,7 @@
 			</div>
 			<div class="flex gap-4 items-center">
 				<label for="done">Done</label>
-				<input id="done" type="checkbox" class="w-4 h-4" bind:value={formData.done} />
+				<input id="done" type="checkbox" class="w-4 h-4" bind:checked={formData.done} />
 			</div>
 			<button class="bg-blue-400 rounded-md text-white font-semibold" type="submit"
 				>Criar tarefa</button
